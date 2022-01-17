@@ -1,9 +1,9 @@
 
-const req = require('express/lib/request')
 const UserLogic = require('./BL/UserLogic'),
       ExerciseLogic = require('./BL/ExerciseLogic'),
       LangLogic = require('./BL/LangLogic'),
-      GeneralLogic = require('./BL/logicGlobal')
+      GeneralLogic = require('./BL/logicGlobal'),
+      jwt = require('jsonwebtoken')
 
 module.exports = app => {
 
@@ -17,7 +17,10 @@ app.post('/login', async (req, res) => {
     try {
         const {email, password} = req.body
         let result = await UserLogic.login(email, password)
-        res.send(result)
+        const id = result.id
+        const PASSWORD = process.env.PASSWORD
+        let token = jwt.sign({id}, PASSWORD, {expiresIn: 3600})
+        res.send({token})
     }
     catch (err) {
         console.log(err);

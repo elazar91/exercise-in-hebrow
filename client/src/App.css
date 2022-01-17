@@ -10,6 +10,8 @@
 
 body {
   direction: rtl;
+  min-height: 100vh;
+  background-color: antiquewhite;
 }
 
 a {

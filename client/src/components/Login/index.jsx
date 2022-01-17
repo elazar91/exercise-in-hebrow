@@ -3,9 +3,11 @@ import style from "./login.module.scss";
 import axios from "axios";
 import { CurrentUser } from "../../App";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react/cjs/react.development";
 
 const Login = () => {
-  const { setLoginUser, loginUser } = useContext(CurrentUser);
+  const [user, setUser] = useState();
+  const { setLoginUser } = useContext(CurrentUser);
   const navigate = useNavigate();
 
   function loginSubmit(e) {
@@ -13,16 +15,12 @@ const Login = () => {
     const form = e.target;
     const values = getAllValues(form);
 
-    axios
-      .post("http://localhost:3333/login", values)
-      .then((result) => {
-        form.reset();
-        setLoginUser(result.data);
-      })
-      .then(() => {
-        console.log(loginUser);
-        if (loginUser) navigate("/");
-      });
+    axios.post("http://localhost:3333/login", values).then((result) => {
+      form.reset();
+      setLoginUser(result.data);
+      setUser(result.data);
+      if (user) navigate("/");
+    });
 
     function getAllValues(form) {
       return Object.values(form).reduce(
